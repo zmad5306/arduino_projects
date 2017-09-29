@@ -12,9 +12,6 @@ const double MIN_TEMP  = 75;
 const double TARGET_TEMP = 250;
 const int MIN_PWM = 100;
 const int REFRESH_INTERVAL = 1000;
-const int LIGHT_TIME = 900000;
-//const int LIGHT_TIME = 10000;
-int runTime = 0;
 int pwmValue = 0;
 
 void setup() {
@@ -22,7 +19,7 @@ void setup() {
  
   while (!Serial) delay(1); // wait for Serial on Leonardo/Zero, etc
 
-  Serial.println("MAX31855 test");
+//  Serial.println("MAX31855 test");
   // wait for MAX chip to stabilize
   delay(500);
 
@@ -46,7 +43,7 @@ void loop() {
 
      if (f >= TARGET_TEMP) {
       pwmValue = 0;
-     } else if (f <= MIN_TEMP || runTime < LIGHT_TIME) {
+     } else if (f <= MIN_TEMP) {
       pwmValue = 255;
      } else {
       pwmValue = map(f, TARGET_TEMP, MIN_TEMP, MIN_PWM, 255);
@@ -54,10 +51,13 @@ void loop() {
   
      Serial.print("PWM = ");
      Serial.println(pwmValue);
+
+//     Serial.print(f);
+//     Serial.print(",");
+//     Serial.println(pwmValue);
   
      analogWrite(FAN, pwmValue);
    }
 
-   runTime += REFRESH_INTERVAL;
    delay(REFRESH_INTERVAL);
 }
