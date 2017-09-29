@@ -8,9 +8,10 @@
 
 Adafruit_MAX31855 thermocouple(MAXCLK, MAXCS, MAXDO);
 
-const int MIN_TEMP  = 75;
-const int TARGET_TEMP = 250;
+const double MIN_TEMP  = 75;
+const double TARGET_TEMP = 250;
 const int MIN_PWM = 100;
+const int REFRESH_INTERVAL = 1000;
 int pwmValue = 0;
 
 void setup() {
@@ -54,5 +55,5 @@ void loop() {
      analogWrite(FAN, pwmValue);
    }
  
-   delay(500);
+   delay(REFRESH_INTERVAL);
 }
