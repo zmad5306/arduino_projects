@@ -31,7 +31,7 @@ void loop() {
 
    double c = thermocouple.readCelsius();
    double f = thermocouple.readFarenheit();
-   if (isnan(c)) {
+   if (isnan(c) || isnan(f)) {
      Serial.println("Something wrong with thermocouple!");
    } else {
      Serial.print("C = "); 
