@@ -12,6 +12,9 @@ const double MIN_TEMP  = 75;
 const double TARGET_TEMP = 250;
 const int MIN_PWM = 100;
 const int REFRESH_INTERVAL = 1000;
+const int LIGHT_TIME = 900000;
+//const int LIGHT_TIME = 10000;
+int runTime = 0;
 int pwmValue = 0;
 
 void setup() {
@@ -43,7 +46,7 @@ void loop() {
 
      if (f >= TARGET_TEMP) {
       pwmValue = 0;
-     } else if (f <= MIN_TEMP) {
+     } else if (f <= MIN_TEMP || runTime < LIGHT_TIME) {
       pwmValue = 255;
      } else {
       pwmValue = map(f, TARGET_TEMP, MIN_TEMP, MIN_PWM, 255);
@@ -54,6 +57,7 @@ void loop() {
   
      analogWrite(FAN, pwmValue);
    }
- 
+
+   runTime += REFRESH_INTERVAL;
    delay(REFRESH_INTERVAL);
 }
