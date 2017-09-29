@@ -31,6 +31,7 @@ void loop() {
 
    double c = thermocouple.readCelsius();
    double f = thermocouple.readFarenheit();
+   
    if (isnan(c) || isnan(f)) {
      Serial.println("Something wrong with thermocouple!");
    } else {
@@ -38,20 +39,20 @@ void loop() {
      Serial.println(c);
      Serial.print("F = ");
      Serial.println(f);
+
+     if (f >= TARGET_TEMP) {
+      pwmValue = 0;
+     } else if (f <= MIN_TEMP) {
+      pwmValue = 255;
+     } else {
+      pwmValue = map(f, TARGET_TEMP, MIN_TEMP, MIN_PWM, 255);
+     }
+  
+     Serial.print("PWM = ");
+     Serial.println(pwmValue);
+  
+     analogWrite(FAN, pwmValue);
    }
-
-   if (f >= TARGET_TEMP) {
-    pwmValue = 0;
-   } else if (f <= MIN_TEMP) {
-    pwmValue = 255;
-   } else {
-    pwmValue = map(f, TARGET_TEMP, MIN_TEMP, MIN_PWM, 255);
-   }
-
-   Serial.print("PWM = ");
-   Serial.println(pwmValue);
-
-   analogWrite(FAN, pwmValue);
  
    delay(500);
 }
