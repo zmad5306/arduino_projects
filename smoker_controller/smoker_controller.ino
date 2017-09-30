@@ -84,7 +84,7 @@ void loop() {
 //     Serial.println(pwmValue);
 //////////////////////////////////
 
-    Serial.println("-----------------------------------------");
+    Serial.println("------------------------------------------");
   
      analogWrite(FAN, pwmValue);
    }
