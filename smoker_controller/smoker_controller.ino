@@ -1,6 +1,17 @@
 #include <SPI.h>
 #include "Adafruit_MAX31855.h"
 
+//////////////////////
+////PIN/WIRE COLOR////
+//////////////////////
+//MAXDO   3     BLUE
+//MAXCS   4     YELLOW
+//MAXCLK  5     WHITE
+//FAN     11    GREEN
+//GROUND  GND   BLACK
+//POWER   5V    RED
+//////////////////////
+
 #define MAXDO   3
 #define MAXCS   4
 #define MAXCLK  5
@@ -8,7 +19,7 @@
 
 Adafruit_MAX31855 thermocouple(MAXCLK, MAXCS, MAXDO);
 
-const double MIN_TEMP  = 75;
+const double MIN_TEMP  = 150;
 const double TARGET_TEMP = 250;
 const int MIN_PWM = 100;
 const int REFRESH_INTERVAL = 1000;
@@ -52,9 +63,13 @@ void loop() {
      Serial.print("PWM = ");
      Serial.println(pwmValue);
 
+//////////////////////////////////
+////////FOR SERIAL PLOTTER////////
+//////////////////////////////////
 //     Serial.print(f);
 //     Serial.print(",");
 //     Serial.println(pwmValue);
+//////////////////////////////////
   
      analogWrite(FAN, pwmValue);
    }
