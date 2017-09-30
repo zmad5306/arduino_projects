@@ -17,13 +17,17 @@
 #define MAXCS   4
 #define MAXCLK  5
 #define FAN     11
+#define TEMP    A0
 
 Adafruit_MAX31855 thermocouple(MAXCLK, MAXCS, MAXDO);
 
-const int MIN_TEMP  = 150;
+const int MIN_TEMP  = 200;
 const int MAX_TEMP = 350;
 const int MIN_PWM = 125;
-const int REFRESH_INTERVAL = 1000; 
+const int MAX_PWM = 255;
+const int REFRESH_INTERVAL = 1000;
+const int MAX_TEMP_VAL = 1023;
+const int MIN_TEMP_VAL = 0;
 int pwmValue = 0;
 
 void setup() {
@@ -41,11 +45,11 @@ void loop() {
    Serial.print("Internal Temp = ");
    Serial.println(thermocouple.readInternal());
 
-   int sensorValue = analogRead(A0);
+   int sensorValue = analogRead(TEMP);
    Serial.print("sensor value = ");
    Serial.println(sensorValue);
 
-   int targetTemp = map(sensorValue, 0, 677, MIN_TEMP, MAX_TEMP);
+   int targetTemp = map(sensorValue, MIN_TEMP_VAL, MAX_TEMP_VAL, MIN_TEMP, MAX_TEMP);
 
    Serial.print("target temp = ");
    Serial.println(targetTemp);
@@ -62,11 +66,11 @@ void loop() {
      Serial.println(f);
 
      if (f >= targetTemp) {
-      pwmValue = 0;
+      pwmValue = MIN_PWM;
      } else if (f <= MIN_TEMP) {
-      pwmValue = 255;
+      pwmValue = MAX_PWM;
      } else {
-      pwmValue = map(f, targetTemp, MIN_TEMP, MIN_PWM, 255);
+      pwmValue = map(f, targetTemp, MIN_TEMP, MIN_PWM, MAX_PWM);
      }
   
      Serial.print("PWM = ");
@@ -79,6 +83,8 @@ void loop() {
 //     Serial.print(",");
 //     Serial.println(pwmValue);
 //////////////////////////////////
+
+    Serial.println("-----------------------------------------");
   
      analogWrite(FAN, pwmValue);
    }
