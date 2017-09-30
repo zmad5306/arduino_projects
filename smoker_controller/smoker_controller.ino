@@ -10,6 +10,7 @@
 //FAN     11    GREEN
 //GROUND  GND   BLACK
 //POWER   5V    RED
+//TEMP    A0    YELLOW
 //////////////////////
 
 #define MAXDO   3
@@ -19,10 +20,10 @@
 
 Adafruit_MAX31855 thermocouple(MAXCLK, MAXCS, MAXDO);
 
-const double MIN_TEMP  = 150;
-const double TARGET_TEMP = 250;
+const int MIN_TEMP  = 150;
+const int MAX_TEMP = 350;
 const int MIN_PWM = 125;
-const int REFRESH_INTERVAL = 1000;
+const int REFRESH_INTERVAL = 1000; 
 int pwmValue = 0;
 
 void setup() {
@@ -30,7 +31,6 @@ void setup() {
  
   while (!Serial) delay(1); // wait for Serial on Leonardo/Zero, etc
 
-//  Serial.println("MAX31855 test");
   // wait for MAX chip to stabilize
   delay(500);
 
@@ -40,6 +40,15 @@ void setup() {
 void loop() {
    Serial.print("Internal Temp = ");
    Serial.println(thermocouple.readInternal());
+
+   int sensorValue = analogRead(A0);
+   Serial.print("sensor value = ");
+   Serial.println(sensorValue);
+
+   int targetTemp = map(sensorValue, 0, 677, MIN_TEMP, MAX_TEMP);
+
+   Serial.print("target temp = ");
+   Serial.println(targetTemp);
 
    double c = thermocouple.readCelsius();
    double f = thermocouple.readFarenheit();
@@ -52,12 +61,12 @@ void loop() {
      Serial.print("F = ");
      Serial.println(f);
 
-     if (f >= TARGET_TEMP) {
+     if (f >= targetTemp) {
       pwmValue = 0;
      } else if (f <= MIN_TEMP) {
       pwmValue = 255;
      } else {
-      pwmValue = map(f, TARGET_TEMP, MIN_TEMP, MIN_PWM, 255);
+      pwmValue = map(f, targetTemp, MIN_TEMP, MIN_PWM, 255);
      }
   
      Serial.print("PWM = ");
