@@ -32,7 +32,7 @@ int pwmValue = 0;
 
 void setup() {
   Serial.begin(9600);
- 
+
   while (!Serial) delay(1); // wait for Serial on Leonardo/Zero, etc
 
   // wait for MAX chip to stabilize
@@ -42,52 +42,42 @@ void setup() {
 }
 
 void loop() {
-   Serial.print("Internal Temp = ");
-   Serial.println(thermocouple.readInternal());
+  int itc = thermocouple.readInternal();
+  int internalTemp = itc * 9 / 5 + 32;
 
-   int sensorValue = analogRead(TEMP);
-   Serial.print("sensor value = ");
-   Serial.println(sensorValue);
+  int ttv = analogRead(TEMP);
+  int targetTemp = map(ttv, MIN_TEMP_VAL, MAX_TEMP_VAL, MIN_TEMP, MAX_TEMP);
+  
+  double currentTemp = thermocouple.readFarenheit();
 
-   int targetTemp = map(sensorValue, MIN_TEMP_VAL, MAX_TEMP_VAL, MIN_TEMP, MAX_TEMP);
-
-   Serial.print("target temp = ");
-   Serial.println(targetTemp);
-
-   double c = thermocouple.readCelsius();
-   double f = thermocouple.readFarenheit();
-   
-   if (isnan(c) || isnan(f)) {
-     Serial.println("Something wrong with thermocouple!");
-   } else {
-     Serial.print("C = "); 
-     Serial.println(c);
-     Serial.print("F = ");
-     Serial.println(f);
-
-     if (f >= targetTemp) {
+  if (isnan(currentTemp)) {
+    Serial.println("Something wrong with thermocouple!");
+  } else {
+    if (currentTemp >= targetTemp) {
       pwmValue = MIN_PWM;
-     } else if (f <= MIN_TEMP) {
+    } else if (currentTemp <= MIN_TEMP) {
       pwmValue = MAX_PWM;
-     } else {
-      pwmValue = map(f, targetTemp, MIN_TEMP, MIN_PWM, MAX_PWM);
-     }
-  
-     Serial.print("PWM = ");
-     Serial.println(pwmValue);
+    } else {
+      pwmValue = map(currentTemp, targetTemp, MIN_TEMP, MIN_PWM, MAX_PWM);
+    }
+  }
 
-//////////////////////////////////
-////////FOR SERIAL PLOTTER////////
-//////////////////////////////////
-//     Serial.print(f);
-//     Serial.print(",");
-//     Serial.println(pwmValue);
-//////////////////////////////////
+  analogWrite(FAN, pwmValue);
 
-    Serial.println("------------------------------------------");
-  
-     analogWrite(FAN, pwmValue);
-   }
+  Serial.print("target temp (analog): ");
+  Serial.println(ttv);
+  Serial.print("target pwm: ");
+  Serial.println(pwmValue);
+  Serial.print("target temp: ");
+  Serial.print(targetTemp);
+  Serial.println("°F");
+  Serial.print("current temp: ");
+  Serial.print(currentTemp);
+  Serial.println("°F");
+  Serial.print("internal temp: ");
+  Serial.print(internalTemp);
+  Serial.println("°F");
+  Serial.println("------------------------------------------");
 
-   delay(REFRESH_INTERVAL);
+  delay(REFRESH_INTERVAL);
 }
