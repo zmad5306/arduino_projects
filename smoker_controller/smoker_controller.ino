@@ -21,7 +21,7 @@ Adafruit_MAX31855 thermocouple(MAXCLK, MAXCS, MAXDO);
 
 const double MIN_TEMP  = 150;
 const double TARGET_TEMP = 250;
-const int MIN_PWM = 100;
+const int MIN_PWM = 125;
 const int REFRESH_INTERVAL = 1000;
 int pwmValue = 0;
 
