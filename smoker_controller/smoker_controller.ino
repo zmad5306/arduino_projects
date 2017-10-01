@@ -10,7 +10,7 @@
 //FAN     11    GREEN
 //GROUND  GND   BLACK
 //POWER   5V    RED
-//TEMP    A0    YELLOW
+//TEMP    A0    ORANGE
 //////////////////////
 
 #define MAXDO   3
