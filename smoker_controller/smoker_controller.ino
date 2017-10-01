@@ -51,7 +51,7 @@ void pwm(double currentTemp, int targetTemp) {
   analogWrite(FAN, pwmValue);
 }
 
-void print(double currentTemp, int targetTemp) {
+void printSerial(double currentTemp, int targetTemp) {
   Serial.print("target temp: ");
   Serial.print(targetTemp);
   Serial.println("°F");
@@ -73,6 +73,6 @@ void loop() {
   int targetTemp = readTargetTemp();
   double currentTemp = thermocouple.readFarenheit();
   pwm(currentTemp, targetTemp);
-  print(currentTemp, targetTemp);
+  printSerial(currentTemp, targetTemp);
   delay(REFRESH_INTERVAL);
 }
