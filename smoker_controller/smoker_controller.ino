@@ -25,7 +25,6 @@ const int MIN_TEMP  = 200;
 const int MAX_TEMP = 350;
 const int MIN_PWM = 125;
 const int MAX_PWM = 255;
-const int REFRESH_INTERVAL = 1000;
 const int MAX_TEMP_VAL = 1023;
 const int MIN_TEMP_VAL = 0;
 
@@ -52,13 +51,23 @@ void pwm(double currentTemp, int targetTemp) {
 }
 
 void printSerial(double currentTemp, int targetTemp) {
-  Serial.print("target temp: ");
+//////////////////////////////////////////////////////////
+///////////////////Serial Monitor/////////////////////////
+//////////////////////////////////////////////////////////
+//  Serial.print("target temp: ");
+//  Serial.print(targetTemp);
+//  Serial.println("°F");
+//  Serial.print("current temp: ");
+//  Serial.print(currentTemp);
+//  Serial.println("°F");
+//  Serial.println("--------------------------");
+
+//////////////////////////////////////////////////////////
+///////////////////Serial Plotter/////////////////////////
+//////////////////////////////////////////////////////////
   Serial.print(targetTemp);
-  Serial.println("°F");
-  Serial.print("current temp: ");
-  Serial.print(currentTemp);
-  Serial.println("°F");
-  Serial.println("--------------------------");
+  Serial.print(",");
+  Serial.println(currentTemp);
 }
 
 void setup() {
@@ -74,5 +83,4 @@ void loop() {
   double currentTemp = thermocouple.readFarenheit();
   pwm(currentTemp, targetTemp);
   printSerial(currentTemp, targetTemp);
-  delay(REFRESH_INTERVAL);
 }
