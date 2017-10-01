@@ -76,6 +76,3 @@ void loop() {
   print(currentTemp, targetTemp);
   delay(REFRESH_INTERVAL);
 }
-
-
-
