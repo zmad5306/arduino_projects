@@ -28,28 +28,14 @@ const int MAX_PWM = 255;
 const int REFRESH_INTERVAL = 1000;
 const int MAX_TEMP_VAL = 1023;
 const int MIN_TEMP_VAL = 0;
-int pwmValue = 0;
 
-void setup() {
-  Serial.begin(9600);
-
-  while (!Serial) delay(1); // wait for Serial on Leonardo/Zero, etc
-
-  // wait for MAX chip to stabilize
-  delay(500);
-
-  pinMode(FAN, OUTPUT);
+int readTargetTemp() {
+  int ttv = analogRead(TEMP);
+  return map(ttv, MIN_TEMP_VAL, MAX_TEMP_VAL, MIN_TEMP, MAX_TEMP);
 }
 
-void loop() {
-  int itc = thermocouple.readInternal();
-  int internalTemp = itc * 9 / 5 + 32;
-
-  int ttv = analogRead(TEMP);
-  int targetTemp = map(ttv, MIN_TEMP_VAL, MAX_TEMP_VAL, MIN_TEMP, MAX_TEMP);
-  
-  double currentTemp = thermocouple.readFarenheit();
-
+void pwm(double currentTemp, int targetTemp) {
+  int pwmValue = 0;
   if (isnan(currentTemp)) {
     Serial.println("Something wrong with thermocouple!");
   } else {
@@ -63,21 +49,33 @@ void loop() {
   }
 
   analogWrite(FAN, pwmValue);
+}
 
-  Serial.print("target temp (analog): ");
-  Serial.println(ttv);
-  Serial.print("target pwm: ");
-  Serial.println(pwmValue);
+void print(double currentTemp, int targetTemp) {
   Serial.print("target temp: ");
   Serial.print(targetTemp);
   Serial.println("°F");
   Serial.print("current temp: ");
   Serial.print(currentTemp);
   Serial.println("°F");
-  Serial.print("internal temp: ");
-  Serial.print(internalTemp);
-  Serial.println("°F");
-  Serial.println("------------------------------------------");
+  Serial.println("--------------------------");
+}
 
+void setup() {
+  Serial.begin(9600);
+
+  while (!Serial) delay(1);
+  delay(500);
+  pinMode(FAN, OUTPUT);
+}
+
+void loop() {
+  int targetTemp = readTargetTemp();
+  double currentTemp = thermocouple.readFarenheit();
+  pwm(currentTemp, targetTemp);
+  print(currentTemp, targetTemp);
   delay(REFRESH_INTERVAL);
 }
+
+
+
