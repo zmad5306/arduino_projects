@@ -7,7 +7,7 @@
 //MAXDO   3     BLUE
 //MAXCS   4     YELLOW
 //MAXCLK  5     WHITE
-//FAN     11    GREEN
+//FAN     6    GREEN
 //GROUND  GND   BLACK
 //POWER   5V    RED
 //TEMP    A0    ORANGE
