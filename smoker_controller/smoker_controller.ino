@@ -16,7 +16,7 @@
 #define MAXDO   3
 #define MAXCS   4
 #define MAXCLK  5
-#define FAN     11
+#define FAN     6
 #define TEMP    A0
 
 Adafruit_MAX31855 thermocouple(MAXCLK, MAXCS, MAXDO);
