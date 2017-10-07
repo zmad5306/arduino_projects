@@ -23,7 +23,7 @@ Adafruit_MAX31855 thermocouple(MAXCLK, MAXCS, MAXDO);
 
 const int MIN_TEMP  = 200;
 const int MAX_TEMP = 350;
-const int MIN_PWM = 125;
+const int MIN_PWM = 100;
 const int MAX_PWM = 255;
 const int MAX_TEMP_VAL = 1023;
 const int MIN_TEMP_VAL = 0;
@@ -39,7 +39,7 @@ void pwm(double currentTemp, int targetTemp) {
     Serial.println("Something wrong with thermocouple!");
   } else {
     if (currentTemp >= targetTemp) {
-      pwmValue = MIN_PWM;
+      pwmValue = 0;
     } else if (currentTemp <= MIN_TEMP) {
       pwmValue = MAX_PWM;
     } else {
